@@ -1,0 +1,94 @@
+/* FeedScroll.css */
+
+@keyframes scrollUp {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); } 
+}
+
+.feed-container {
+  text-align: center;
+  max-width: 600px; /* Add max-width to control container width */
+  margin: 0 auto; /* Center the container */
+  width: 90%; /* Take 90% of parent width on larger screens */
+}
+
+.feed-container h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #34495e;
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.feed-container h2::after {
+  content: '';
+  width: 50px;
+  height: 4px;
+  background: #e74c3c;
+  display: block;
+  margin: 10px auto 0;
+  border-radius: 2px;
+}
+
+.feed-wrapper {
+  height: 300px;
+  overflow: hidden;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+  padding: 10px 0;
+  width: 100%; /* Ensure it takes full width of container */
+}
+
+.feed-track {
+  display: flex;
+  flex-direction: column;
+  animation: scrollUp 20s linear infinite;
+}
+
+.feed-item {
+  height: 70px;
+  padding: 10px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  color: #333;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.feed-item:last-child {
+  border-bottom: none;
+}
+
+.feed-item h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 5px 0;
+}
+
+.feed-item p {
+  font-size: 10px;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* मोबाइल के लिए मीडिया क्वेरी */
+@media (max-width: 480px) {
+  .feed-container {
+    width: 95%; /* Slightly more width on mobile */
+    max-width: none; /* Remove max-width restriction on mobile */
+  }
+  
+  .feed-wrapper {
+    height: 40vh;
+  }
+}
+
+/* Additional media query for larger screens */
+@media (min-width: 1200px) {
+  .feed-container {
+    max-width: 500px; /* Even smaller on very large screens */
+  }
+}
