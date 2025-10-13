@@ -11,6 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(cors({ origin: process.env.FRONTEND_URL }));
 
+
 // Routes
 app.use('/api/auth', require('./src/routes/auth'));
 app.use('/api/employees', require('./src/routes/employees'));
