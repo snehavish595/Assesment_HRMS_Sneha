@@ -198,6 +198,20 @@ const AddEmployeePage = () => {
                                 readOnly
                             />
                         </div>
+
+                         <div className="form-group">
+                            <label htmlFor="emp-password">Set Password *</label>
+                            <input 
+                                type="text" 
+                                id="emp-password" 
+                                name="password" 
+                                value={formData.password} 
+                                onChange={handleChange} 
+                                required 
+                                placeholder="Auto-generated password"
+                                readOnly
+                            />
+                        </div>
                         
                         <div className="form-group">
                             <label htmlFor="emp-email">Email *</label>
@@ -212,19 +226,7 @@ const AddEmployeePage = () => {
                             />
                         </div>
                         
-                        <div className="form-group">
-                            <label htmlFor="emp-password">Set Password *</label>
-                            <input 
-                                type="text" 
-                                id="emp-password" 
-                                name="password" 
-                                value={formData.password} 
-                                onChange={handleChange} 
-                                required 
-                                placeholder="Auto-generated password"
-                                readOnly
-                            />
-                        </div>
+                       
                         
                         <div className="form-group">
                             <label htmlFor="doj">Date of Joining *</label>

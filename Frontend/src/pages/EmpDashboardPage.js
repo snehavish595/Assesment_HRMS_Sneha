@@ -19,7 +19,7 @@ const EmpDashboardPage = () => {
     };
 
     const requestHistory = [
-        { id: 1, type: 'Leave Request', status: 'Approved', date: '2024-01-10', details: 'Annual Leave - 5 days' },
+        { id: 1, type: 'Leave Request', status: 'Approved', date: '2024-01-15', details: 'Annual Leave - 5 days' },
         { id: 2, type: 'Project Change', status: 'Pending', date: '2024-01-12', details: 'Request to move to Mobile Development' },
         { id: 3, type: 'Leave Request', status: 'Approved', date: '2024-01-05', details: 'Sick Leave - 2 days' },
         { id: 4, type: 'Project Change', status: 'Disapproved', date: '2024-01-03', details: 'Request to move to AI/ML team' },
@@ -90,9 +90,9 @@ const EmpDashboardPage = () => {
                                 <thead>
                                     <tr>
                                         <th>Sr.</th>
+                                        <th>Date</th> {/* Moved Date column here */}
                                         <th>Request Type</th>
                                         <th>Status</th>
-                                        <th>Date</th>
                                         <th>Details</th>
                                     </tr>
                                 </thead>
@@ -100,13 +100,13 @@ const EmpDashboardPage = () => {
                                     {paginatedRequests.map((request, index) => (
                                         <tr key={request.id}>
                                             <td>{startIndex + index + 1}</td>
+                                            <td>{request.date}</td> {/* Date value */}
                                             <td>{request.type}</td>
                                             <td>
                                                 <span className={`status-badge ${getStatusClass(request.status)}`}>
                                                     {request.status}
                                                 </span>
                                             </td>
-                                            <td>{request.date}</td>
                                             <td>{request.details}</td>
                                         </tr>
                                     ))}

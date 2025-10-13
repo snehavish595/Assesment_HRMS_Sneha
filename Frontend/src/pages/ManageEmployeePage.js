@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-// import Header from '../components/Header';
-// import Footer from '../components/Footer';
 import './css/ManageEmployeePage.css';
 
 const ManageEmployeePage = ({ employees }) => {
@@ -10,9 +8,9 @@ const ManageEmployeePage = ({ employees }) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [editFormData, setEditFormData] = useState({});
-    const itemsPerPage = 5; // ek page par 3 employees
+    const itemsPerPage = 5;
 
-    // Dummy data for employees
+    // Dummy data
     const dummyEmployees = [
         { sr: 1, name: 'Ashish Sharma', code: 'EMP001', dept: 'IT', proj: 'Project A' },
         { sr: 2, name: 'Priya Singh', code: 'EMP002', dept: 'HR', proj: 'Project B' },
@@ -26,18 +24,15 @@ const ManageEmployeePage = ({ employees }) => {
         : dummyEmployees.filter(emp => emp.dept === selectedDept);
 
     const departments = ['All', ...new Set(dummyEmployees.map(emp => emp.dept))];
+    const projects = [...new Set(dummyEmployees.map(emp => emp.proj))];
 
-    // Pagination calculation
+    // Pagination
     const totalPages = Math.ceil(filteredEmployees.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const paginatedEmployees = filteredEmployees.slice(startIndex, startIndex + itemsPerPage);
 
-    // Function to get first name only
-    const getFirstName = (fullName) => {
-        return fullName.split(' ')[0];
-    };
+    const getFirstName = (fullName) => fullName.split(' ')[0];
 
-    // Handle edit button click
     const handleUpdate = (employee) => {
         setSelectedEmployee(employee);
         setEditFormData({
@@ -49,30 +44,24 @@ const ManageEmployeePage = ({ employees }) => {
         setShowEditModal(true);
     };
 
-    // Handle delete button click
     const handleDelete = (employee) => {
         setSelectedEmployee(employee);
         setShowDeleteModal(true);
     };
 
-    // Handle edit form submission
     const handleEditSubmit = (e) => {
         e.preventDefault();
-        // Here you would typically update the employee data
         console.log('Updated employee data:', editFormData);
         setShowEditModal(false);
         setSelectedEmployee(null);
     };
 
-    // Handle delete confirmation
     const handleDeleteConfirm = () => {
-        // Here you would typically delete the employee data
         console.log('Deleting employee:', selectedEmployee);
         setShowDeleteModal(false);
         setSelectedEmployee(null);
     };
 
-    // Handle modal close
     const handleModalClose = () => {
         setShowEditModal(false);
         setShowDeleteModal(false);
@@ -80,7 +69,6 @@ const ManageEmployeePage = ({ employees }) => {
         setEditFormData({});
     };
 
-    // Dept change par hamesha first page se start ho
     const handleDeptChange = (e) => {
         setSelectedDept(e.target.value);
         setCurrentPage(1);
@@ -88,12 +76,10 @@ const ManageEmployeePage = ({ employees }) => {
 
     return (
         <div className="container">
-            {/* <Header /> */}
             <main className="manage-employee-main">
                 <div className="manage-employee-box">
                     <h2>MANAGE EMPLOYEE</h2>
 
-                    {/* Department Filter */}
                     <div className="filter-container">
                         <label htmlFor="dept-select">Select Dept.</label>
                         <select id="dept-select" value={selectedDept} onChange={handleDeptChange}>
@@ -103,7 +89,6 @@ const ManageEmployeePage = ({ employees }) => {
                         </select>
                     </div>
 
-                    {/* Employee Table */}
                     <div className="employee-table-container">
                         <table className="employee-table">
                             <thead>
@@ -132,35 +117,17 @@ const ManageEmployeePage = ({ employees }) => {
                         </table>
                     </div>
 
-                    {/* Pagination */}
                     <div className="pagination">
-                        <button 
-                            disabled={currentPage === 1} 
-                            onClick={() => setCurrentPage(prev => prev - 1)}
-                        >
-                            &lt;
-                        </button>
-
+                        <button disabled={currentPage === 1} onClick={() => setCurrentPage(prev => prev - 1)}>&lt;</button>
                         {Array.from({ length: totalPages }, (_, i) => i + 1).map(num => (
-                            <button
-                                key={num}
-                                className={currentPage === num ? "active" : ""}
-                                onClick={() => setCurrentPage(num)}
-                            >
+                            <button key={num} className={currentPage === num ? "active" : ""} onClick={() => setCurrentPage(num)}>
                                 {num}
                             </button>
                         ))}
-
-                        <button 
-                            disabled={currentPage === totalPages} 
-                            onClick={() => setCurrentPage(prev => prev + 1)}
-                        >
-                            &gt;
-                        </button>
+                        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => prev + 1)}>&gt;</button>
                     </div>
                 </div>
             </main>
-            {/* <Footer /> */}
 
             {/* Edit Modal */}
             {showEditModal && (
@@ -191,21 +158,27 @@ const ManageEmployeePage = ({ employees }) => {
                             </div>
                             <div className="form-group">
                                 <label>Department:</label>
-                                <input
-                                    type="text"
+                                <select
                                     value={editFormData.dept || ''}
                                     onChange={(e) => setEditFormData({...editFormData, dept: e.target.value})}
                                     required
-                                />
+                                >
+                                    {departments.filter(d => d !== 'All').map((dept, idx) => (
+                                        <option key={idx} value={dept}>{dept}</option>
+                                    ))}
+                                </select>
                             </div>
                             <div className="form-group">
                                 <label>Project:</label>
-                                <input
-                                    type="text"
+                                <select
                                     value={editFormData.proj || ''}
                                     onChange={(e) => setEditFormData({...editFormData, proj: e.target.value})}
                                     required
-                                />
+                                >
+                                    {projects.map((proj, idx) => (
+                                        <option key={idx} value={proj}>{proj}</option>
+                                    ))}
+                                </select>
                             </div>
                             <div className="modal-actions">
                                 <button type="button" onClick={handleModalClose} className="btn-cancel">Cancel</button>
@@ -216,7 +189,7 @@ const ManageEmployeePage = ({ employees }) => {
                 </div>
             )}
 
-            {/* Delete Confirmation Modal */}
+            {/* Delete Modal */}
             {showDeleteModal && (
                 <div className="modal-overlay" onClick={handleModalClose}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>

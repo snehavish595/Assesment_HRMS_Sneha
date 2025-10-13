@@ -1,21 +1,18 @@
-/* Header.css */
-
 .header {
   display: flex;
   align-items: center;
-  padding: 25px 40px;
+  justify-content: flex-start; /* Ensures items align properly */
+  padding: 20px 40px;
   background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
   color: white;
   border-bottom: 4px solid #e74c3c;
-  position: relative;
-  overflow: hidden;
-  width: auto; /* Changed from default */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%; /* Use full width */
+  max-width: 1200px;
   margin: 0 auto; /* Center the header */
-  left: 50%; /* Center positioning */
-  transform: translateX(-50%); /* Perfect centering */
-  min-width: 300px; /* Minimum width */
-  max-width: 1200px; /* Maximum width on laptop */
-  border-radius: 15px 15px 0 0; /* Rounded bottom corners */
+  border-radius: 15px 15px 0 0;
 }
 
 .header::before {
@@ -27,6 +24,8 @@
   bottom: 0;
   background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
   opacity: 0.1;
+  pointer-events: none; /* Prevent interference */
+  z-index: -1;
 }
 
 .logo-placeholder {
@@ -75,24 +74,19 @@
   opacity: 0.9;
 }
 
-/* Media query for tablets and phones */
+/* Tablet & mobile */
 @media (max-width: 768px) {
   .header {
-    width: 100%; /* Full width on mobile */
-    left: 0; /* Remove centering */
-    transform: none; /* Remove transform */
-    border-radius: 0; /* Remove rounded corners */
-    max-width: none; /* Remove max width restriction */
-    padding: 15px 20px;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    padding: 15px 20px;
+    border-radius: 0;
+    max-width: 100%;
   }
   
   .logo-placeholder {
     width: 50px;
     height: 50px;
-    margin-right: 10px;
   }
   
   .header-text {
@@ -109,7 +103,6 @@
   }
 }
 
-/* Media query for small mobile phones */
 @media (max-width: 480px) {
   .header {
     padding: 12px 15px;
