@@ -96,72 +96,47 @@ const AddEmployeePage = () => {
         return null;
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        
-        if (localStorage.getItem('isLoggedIn') !== 'true' || localStorage.getItem('role') !== 'HR') {
-            alert("Session expired. Please login again.");
-            navigate('/login');
-            return;
-        }
+   const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
 
-        if (!formData.name || !formData.code || !formData.doj || !formData.dept || !formData.proj || !formData.email || !formData.password) {
-            alert('Please fill in all fields');
-            return;
-        }
+    const token = localStorage.getItem('authToken');
 
-        setIsLoading(true);
-
-        try {
-            const token = localStorage.getItem('authToken');
-            
-            // ✅ CORRECT BACKEND URL (Port 8000)
-            const response = await axios.post('http://127.0.0.1:8000/api/employees', formData, {
+    try {
+        const response = await axios.post(
+            'http://127.0.0.1:8000/api/employees',
+            formData,
+            {
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'Content-Type':'application/json'
+                    'Content-Type': 'application/json'
                 },
-                timeout: 10000 // 10 second timeout
-            });
-
-            if (response.data.success) {
-                alert('Employee added to MySQL database successfully!');
-                setFormData({ name: '', code: generateEmployeeCode(), doj: '', dept: '', proj: '', email: '', password: generatePassword() });
-                navigate('/manage-employee');
-            } else {
-                throw new Error('Backend response not successful');
+                timeout: 10000
             }
+        );
 
-        } catch (error) {
-            console.error('Backend Error:', error);
-            
-            // Fallback to localStorage
-            alert('Backend unavailable. Saving locally...');
-            
-            const employees = JSON.parse(localStorage.getItem('employees') || '[]');
-            const nextSr = employees.length > 0 ? Math.max(...employees.map(emp => emp.sr || 0)) + 1 : 1;
-            
-            const newEmployee = {
-                sr: nextSr,
-                name: formData.name,
-                code: formData.code,
-                dept: formData.dept,
-                proj: formData.proj,
-                doj: formData.doj,
-                addedDate: new Date().toISOString(),
-                addedBy: 'HR'
-            };
-            
-            employees.push(newEmployee);
-            localStorage.setItem('employees', JSON.stringify(employees));
-            
-            alert('Employee saved locally!');
-            setFormData({ name: '', code: generateEmployeeCode(), doj: '', dept: '', proj: '', email: '', password: generatePassword() });
+        if (response.data.success) {
+            alert('Employee added to MongoDB successfully!');
+            setFormData({
+                name: '',
+                code: generateEmployeeCode(),
+                doj: '',
+                dept: '',
+                proj: '',
+                email: '',
+                password: generatePassword()
+            });
             navigate('/manage-employee');
-        } finally {
-            setIsLoading(false);
+        } else {
+            throw new Error(response.data.message || 'Failed to save employee.');
         }
-    };
+    } catch (error) {
+        console.error('Backend Error:', error);
+        alert(`Error saving employee: ${error.response?.data?.message || error.message}`);
+    } finally {
+        setIsLoading(false);
+    }
+};
 
     return (
         <div className="container">

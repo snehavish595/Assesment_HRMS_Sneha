@@ -3,14 +3,14 @@ const mongoose = require("mongoose");
 const EmployeeSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    empCode: { type: String, required: true, unique: true },
+    code: { type: String, required: true},
     email: { type: String, required: true, unique: true },
     password: { type: String },
     role: { type: String, enum: ["HR", "EMPLOYEE"], default: "EMPLOYEE" },
     doj: { type: Date },
     manager: { type: String },
-    department: { type: String },
-    project: { type: String },
+    dept: { type: String },
+    proj: { type: String },
     isApproved: { type: Boolean, default: false },
   },
   { timestamps: true }

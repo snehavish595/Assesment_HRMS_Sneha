@@ -7,33 +7,46 @@ const Employee = require('../models/Employee');
 // CREATE new employee (HR registration)
 router.post('/', async (req, res) => {
   try {
-    const { name, empCode, email, role, department, project, doj, manager } = req.body;
+    console.log("📦 Incoming employee data:", req.body);
+    const { name, doj, dept, proj, email, password } = req.body;
 
-    // Check duplicates
-    const existing = await Employee.findOne({ empCode });
-    if (existing) return res.status(400).json({ message: 'Employee already exists with this code' });
+    // Find last employee
+    const lastEmp = await Employee.findOne().sort({ _id: -1 });
+    let newCode = "";
 
-    // Create new employee
+    if (!lastEmp || !lastEmp.empCode) {
+      newCode = "OS2501001";
+    } else {
+      const num = parseInt(lastEmp.empCode.slice(-3)) + 1;
+      const now = new Date();
+      const year = now.getFullYear().toString().slice(-2);
+      const month = (now.getMonth() + 1).toString().padStart(2, "0");
+      newCode = `OS${year}${month}${num.toString().padStart(3, "0")}`;
+    }
+
     const newEmployee = new Employee({
       name,
-      empCode,
-      email,
-      role: role || 'EMPLOYEE',
-      department,
-      project,
+      empCode: newCode,
       doj,
-      manager,
-      password: null,     // HR can set password later
-      isApproved: false,  // default
+      dept,
+      proj,
+      email,
+      password,
     });
 
     await newEmployee.save();
-    res.status(201).json({ message: 'Employee registered successfully', employee: newEmployee });
+
+    res.status(201).json({
+      success: true,
+      message: "Employee saved successfully",
+      code: newCode,
+    });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: err.message });
+    console.error("❌ Error saving employee:", err);
+    res.status(400).json({ success: false, message: err.message });
   }
 });
+
 
 module.exports = router;
 
