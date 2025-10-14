@@ -6,6 +6,16 @@ require('dotenv').config();
 
 
 const app = express();
+const path = require('path');
+
+// Serve static files from React build
+app.use(express.static(path.join(__dirname, 'frontend/build')));
+
+// Catch-all route to serve React
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/build', 'index.html'));
+});
+
 
 // Middleware
 app.use(express.json());
