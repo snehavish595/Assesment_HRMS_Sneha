@@ -97,7 +97,7 @@ const LoginPage = () => {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="login-id">Login ID (Email)</label>
+                            <label htmlFor="login-id">Employee ID</label>
                             <input
                                 type="email"
                                 id="login-id"

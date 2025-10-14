@@ -88,20 +88,33 @@ const Footer = () => {
           </>
         ) : (
           <>
-            <NavLink to="/login" state={{ role: "HR" }}>
-              <FaUserTie className="footer-icon" />
-              <span className="footer-text">HR</span>
-            </NavLink>
+           <NavLink
+  to="/login"
+  state={{ role: "HR" }}
+  className={() => (location.state?.role === "HR" ? "active" : "")}
+>
+  <FaUserTie className="footer-icon" />
+  <span className="footer-text">HR</span>
+</NavLink>
 
-            <NavLink to="/login" state={{ role: "Employee" }}>
-              <FaUsers className="footer-icon" />
-              <span className="footer-text">EMP</span>
-            </NavLink>
+<NavLink
+  to="/login"
+  state={{ role: "Employee" }}
+  className={() => (location.state?.role === "Employee" ? "active" : "")}
+>
+  <FaUsers className="footer-icon" />
+  <span className="footer-text">EMP</span>
+</NavLink>
 
-            <NavLink to="/login">
-              <FaSignInAlt className="footer-icon" />
-              <span className="footer-text">Login</span>
-            </NavLink>
+<NavLink
+  to="/login"
+  className={({ isActive }) => (!location.state?.role && isActive ? "active" : "")}
+>
+  <FaSignInAlt className="footer-icon" />
+  <span className="footer-text">Login</span>
+</NavLink>
+
+
           </>
         )}
       </nav>
