@@ -4,8 +4,11 @@ import { useNavigate } from 'react-router-dom';
 // import Header from '../components/Header';
 // import Footer from '../components/Footer';
 import './css/AddEmployeePage.css';
+import { useRef } from 'react';
+
 
 const AddEmployeePage = () => {
+      const nextCodeRef = useRef(1);
     const [formData, setFormData] = useState({
         name: '',
         code: '',
@@ -20,7 +23,6 @@ const AddEmployeePage = () => {
 
     const navigate = useNavigate();
 
-    // Department and project mapping
     const departmentProjects = {
         'HRMS': ['Induction', 'OnBoarding'],
         'Recruitment': ['IT- Recruitment', 'Non-IT- Recruitment'],
@@ -32,19 +34,16 @@ const AddEmployeePage = () => {
 
     const departments = ['HRMS', 'Recruitment', 'Development', 'Digital Marketing', 'Sales and Marketing', 'Account'];
 
-    // Generate auto-incremental employee code
-    const generateEmployeeCode = () => {
-        const now = new Date();
-        const year = now.getFullYear().toString().slice(-2);
-        const month = (now.getMonth() + 1).toString().padStart(2, '0');
-        
-        // Get employee count from localStorage or set to 0
-        const employees = JSON.parse(localStorage.getItem('employees') || '[]');
-        const count = employees.length + 1;
-        const countStr = count.toString().padStart(3, '0');
-        
-        return `OS${year}${month}${countStr}`;
-    };
+   
+const generateEmployeeCode = () => {
+    const now = new Date();
+    const year = now.getFullYear().toString().slice(-2);
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    
+    const codeNumber = nextCodeRef.current.toString().padStart(3, '0');
+    return `OS${year}${month}${codeNumber}`;
+};
+
 
     // Generate random password
     const generatePassword = () => {
@@ -60,12 +59,12 @@ const AddEmployeePage = () => {
         const { name, value } = e.target;
         
         if (name === 'dept') {
-            // Update projects when department changes
+    
             setProjects(departmentProjects[value] || []);
             setFormData({
                 ...formData,
                 [name]: value,
-                proj: '', // Reset project when department changes
+                proj: '', 
             });
         } else {
             setFormData({
@@ -75,16 +74,41 @@ const AddEmployeePage = () => {
         }
     };
 
-    // Set auto-generated code and password on component mount
-    useEffect(() => {
-        setFormData(prev => ({
-            ...prev,
-            code: generateEmployeeCode(),
-            password: generatePassword()
-        }));
-    }, []);
+const resetForm = () => {
+    const employees = JSON.parse(localStorage.getItem('employees') || '[]');
+    const newCode = generateEmployeeCode();
+    
+    localStorage.setItem('employees', JSON.stringify([...employees, { code: newCode }]));
 
-    // Authentication check
+    setFormData({
+        name: '',
+        code: generateEmployeeCode(),
+        doj: '',
+        dept: '',
+        proj: '',
+        email: '',
+        password: generatePassword()
+    });
+};
+
+
+useEffect(() => {
+    resetForm();
+}, []);
+
+
+   useEffect(() => {
+  setFormData({
+    name: '',
+    code: generateEmployeeCode(),
+    doj: '',
+    dept: '',
+    proj: '',
+    email: '',
+    password: generatePassword()
+  });
+}, [navigate]);
+
     const isAuthenticated = localStorage.getItem('isLoggedIn') === 'true';
     const userRole = localStorage.getItem('role');
 
@@ -117,15 +141,9 @@ const AddEmployeePage = () => {
 
         if (response.data.success) {
             alert('Employee added to MongoDB successfully!');
-            setFormData({
-                name: '',
-                code: generateEmployeeCode(),
-                doj: '',
-                dept: '',
-                proj: '',
-                email: '',
-                password: generatePassword()
-            });
+            nextCodeRef.current += 1; 
+            resetForm();
+        
             navigate('/manage-employee');
         } else {
             throw new Error(response.data.message || 'Failed to save employee.');

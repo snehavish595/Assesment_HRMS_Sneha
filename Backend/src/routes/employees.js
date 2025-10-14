@@ -7,17 +7,17 @@ const Employee = require('../models/Employee');
 // CREATE new employee (HR registration)
 router.post('/', async (req, res) => {
   try {
-    console.log("📦 Incoming employee data:", req.body);
+    console.log("Incoming employee data:", req.body);
     const { name, doj, dept, proj, email, password } = req.body;
 
     // Find last employee
     const lastEmp = await Employee.findOne().sort({ _id: -1 });
     let newCode = "";
 
-    if (!lastEmp || !lastEmp.empCode) {
+    if (!lastEmp || !lastEmp.code) {
       newCode = "OS2501001";
     } else {
-      const num = parseInt(lastEmp.empCode.slice(-3)) + 1;
+      const num = parseInt(lastEmp.code.slice(-3)) + 1;
       const now = new Date();
       const year = now.getFullYear().toString().slice(-2);
       const month = (now.getMonth() + 1).toString().padStart(2, "0");
@@ -26,7 +26,7 @@ router.post('/', async (req, res) => {
 
     const newEmployee = new Employee({
       name,
-      empCode: newCode,
+      code: newCode,
       doj,
       dept,
       proj,
@@ -42,7 +42,7 @@ router.post('/', async (req, res) => {
       code: newCode,
     });
   } catch (err) {
-    console.error("❌ Error saving employee:", err);
+    console.error(" Error saving employee:", err);
     res.status(400).json({ success: false, message: err.message });
   }
 });

@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './css/ManageEmployeePage.css';
 
-const ManageEmployeePage = ({ employees }) => {
+const ManageEmployeePage = () => {
+    const [employees, setEmployees] = useState([]);
     const [selectedDept, setSelectedDept] = useState('All');
     const [currentPage, setCurrentPage] = useState(1);
     const [showEditModal, setShowEditModal] = useState(false);
@@ -10,21 +12,36 @@ const ManageEmployeePage = ({ employees }) => {
     const [editFormData, setEditFormData] = useState({});
     const itemsPerPage = 5;
 
-    // Dummy data
-    const dummyEmployees = [
-        { sr: 1, name: 'Ashish Sharma', code: 'EMP001', dept: 'IT', proj: 'Project A' },
-        { sr: 2, name: 'Priya Singh', code: 'EMP002', dept: 'HR', proj: 'Project B' },
-        { sr: 3, name: 'Rahul Jain', code: 'EMP003', dept: 'IT', proj: 'Project C' },
-        { sr: 4, name: 'Anjali Gupta', code: 'EMP004', dept: 'MK', proj: 'Project D' },
-        { sr: 5, name: 'Vikram Yadav', code: 'EMP005', dept: 'HR', proj: 'Project A' },
-    ];
+ 
+useEffect(() => {
+    const fetchEmployees = async () => {
+        try {
+            const token = localStorage.getItem('authToken'); // if auth is required
+            const res = await axios.get('http://127.0.0.1:8000/api/employees', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            console.log(res.data); 
+
+            const employeesData = res.data.employees || res.data || [];
+            setEmployees(employeesData);
+        } catch (err) {
+            console.error('Error fetching employees:', err);
+            setEmployees([]); 
+        }
+    };
+    fetchEmployees();
+}, []);
+
 
     const filteredEmployees = selectedDept === 'All'
-        ? dummyEmployees
-        : dummyEmployees.filter(emp => emp.dept === selectedDept);
+        ? employees
+        : employees.filter(emp => emp.dept === selectedDept);
 
-    const departments = ['All', ...new Set(dummyEmployees.map(emp => emp.dept))];
-    const projects = [...new Set(dummyEmployees.map(emp => emp.proj))];
+    const departments = ['All', ...new Set(employees.map(emp => emp.dept))];
+    const projects = [...new Set(employees.map(emp => emp.proj))];
 
     // Pagination
     const totalPages = Math.ceil(filteredEmployees.length / itemsPerPage);
@@ -97,16 +114,18 @@ const ManageEmployeePage = ({ employees }) => {
                                     <th>Name</th>
                                     <th>Code</th>
                                     <th>Dept.</th>
+                                    <th>Project</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {paginatedEmployees.map(emp => (
-                                    <tr key={emp.code}>
-                                        <td>{emp.sr}</td>
+                                {paginatedEmployees.map((emp, index) => (
+                                    <tr key={emp._id || emp.code}>
+                                        <td>{startIndex + index + 1}</td>
                                         <td>{getFirstName(emp.name)}</td>
                                         <td>{emp.code}</td>
                                         <td>{emp.dept}</td>
+                                        <td>{emp.proj}</td>
                                         <td className="action-buttons">
                                             <button className="update-btn" onClick={() => handleUpdate(emp)}>✏️</button>
                                             <button className="delete-btn" onClick={() => handleDelete(emp)}>🗑️</button>
@@ -128,86 +147,6 @@ const ManageEmployeePage = ({ employees }) => {
                     </div>
                 </div>
             </main>
-
-            {/* Edit Modal */}
-            {showEditModal && (
-                <div className="modal-overlay" onClick={handleModalClose}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h3>Edit Employee</h3>
-                            <button className="modal-close" onClick={handleModalClose}>×</button>
-                        </div>
-                        <form onSubmit={handleEditSubmit} className="modal-form">
-                            <div className="form-group">
-                                <label>Name:</label>
-                                <input
-                                    type="text"
-                                    value={editFormData.name || ''}
-                                    onChange={(e) => setEditFormData({...editFormData, name: e.target.value})}
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Code:</label>
-                                <input
-                                    type="text"
-                                    value={editFormData.code || ''}
-                                    onChange={(e) => setEditFormData({...editFormData, code: e.target.value})}
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Department:</label>
-                                <select
-                                    value={editFormData.dept || ''}
-                                    onChange={(e) => setEditFormData({...editFormData, dept: e.target.value})}
-                                    required
-                                >
-                                    {departments.filter(d => d !== 'All').map((dept, idx) => (
-                                        <option key={idx} value={dept}>{dept}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label>Project:</label>
-                                <select
-                                    value={editFormData.proj || ''}
-                                    onChange={(e) => setEditFormData({...editFormData, proj: e.target.value})}
-                                    required
-                                >
-                                    {projects.map((proj, idx) => (
-                                        <option key={idx} value={proj}>{proj}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="modal-actions">
-                                <button type="button" onClick={handleModalClose} className="btn-cancel">Cancel</button>
-                                <button type="submit" className="btn-save">Save Changes</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
-
-            {/* Delete Modal */}
-            {showDeleteModal && (
-                <div className="modal-overlay" onClick={handleModalClose}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h3>Confirm Delete</h3>
-                            <button className="modal-close" onClick={handleModalClose}>×</button>
-                        </div>
-                        <div className="modal-body">
-                            <p>Are you sure you want to delete employee <strong>{selectedEmployee?.name}</strong>?</p>
-                            <p>This action cannot be undone.</p>
-                        </div>
-                        <div className="modal-actions">
-                            <button onClick={handleModalClose} className="btn-cancel">Cancel</button>
-                            <button onClick={handleDeleteConfirm} className="btn-delete">Delete</button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
