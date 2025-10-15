@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/Assesment_HRMS_Sneha/static/css/main.912d19fa.css",
-    "main.js": "/Assesment_HRMS_Sneha/static/js/main.5cc93302.js",
+    "main.js": "/Assesment_HRMS_Sneha/static/js/main.351f5b9e.js",
     "index.html": "/Assesment_HRMS_Sneha/index.html",
     "main.912d19fa.css.map": "/Assesment_HRMS_Sneha/static/css/main.912d19fa.css.map",
-    "main.5cc93302.js.map": "/Assesment_HRMS_Sneha/static/js/main.5cc93302.js.map"
+    "main.351f5b9e.js.map": "/Assesment_HRMS_Sneha/static/js/main.351f5b9e.js.map"
   },
   "entrypoints": [
     "static/css/main.912d19fa.css",
-    "static/js/main.5cc93302.js"
+    "static/js/main.351f5b9e.js"
   ]
 }
