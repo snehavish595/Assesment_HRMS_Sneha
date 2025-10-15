@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter , Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -15,7 +15,7 @@ import './App.css';
 
 function App() {
     return (
-        <BrowserRouter >
+        <HashRouter  >
             <AuthProvider>
                 <div className="App">
                     <Header/>
@@ -66,7 +66,7 @@ function App() {
                     <Footer/>
                 </div>
             </AuthProvider>
-        </BrowserRouter>
+        </HashRouter >
     );
 }
 
