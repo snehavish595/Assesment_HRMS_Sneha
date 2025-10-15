@@ -2,7 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://snehavish595.github.io/Assesment_HRMS_Sneha",
+"homepage": "https://snehavish595.github.io/Assesment_HRMS_Sneha",
   "proxy": "http://localhost:8000",
   "dependencies": {
     "@testing-library/dom": "^10.4.1",

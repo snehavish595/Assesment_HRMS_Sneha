@@ -4,12 +4,13 @@ import './css/ImageCarousel.css';
 const ImageCarousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const images = [
-    "/images/Image_1.jpg",
-    "/images/Image_2.jpg",
-    "/images/Image_3.jpg",
-    "/images/Image_4.jpg"
-  ];
+const images = [
+  `${process.env.PUBLIC_URL}/images/Image_1.jpg`,
+  `${process.env.PUBLIC_URL}/images/Image_2.jpg`,
+  `${process.env.PUBLIC_URL}/images/Image_3.jpg`,
+  `${process.env.PUBLIC_URL}/images/Image_4.jpg`
+];
+
 
   // Auto-slide every 4 seconds
   useEffect(() => {
