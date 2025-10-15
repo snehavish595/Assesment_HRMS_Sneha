@@ -14,8 +14,9 @@ import Footer from './components/Footer';
 import './App.css';
 
 function App() {
+    const isProduction = process.env.NODE_ENV === 'production';
     return (
-        <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <BrowserRouter basename={isProduction ? process.env.PUBLIC_URL : '/'}>
             <AuthProvider>
                 <div className="App">
                     <Header/>
