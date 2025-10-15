@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter , Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -14,11 +14,14 @@ import Footer from './components/Footer';
 import './App.css';
 
 function App() {
+    // Use the correct basename depending on environment
+    const basename = process.env.NODE_ENV === 'production' ? '/Assesment_HRMS_Sneha' : '/';
+
     return (
-        <HashRouter  >
+        <BrowserRouter basename={basename}>
             <AuthProvider>
                 <div className="App">
-                    <Header/>
+                    <Header />
                     <Routes>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/login" element={<LoginPage />} />
@@ -63,10 +66,10 @@ function App() {
                             }
                         />
                     </Routes>
-                    <Footer/>
+                    <Footer />
                 </div>
             </AuthProvider>
-        </HashRouter >
+        </BrowserRouter>
     );
 }
 
